@@ -1,0 +1,1026 @@
+/* Evitar scroll horizontal y asegurar que elementos no desborden */
+html, body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* evita desplazamiento lateral */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Asegurar que todos los elementos usen el mismo box-sizing */
+*, *::before, *::after { box-sizing: inherit; }
+
+/* Imágenes y medios no deben desbordar */
+img, picture, video, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Tablas responsivas: usar todo el ancho y permitir scroll interno si hace falta */
+.table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; max-width: 100%; border-collapse: collapse; }
+
+/* Forzar barra de progreso y nav a ocupar el ancho exacto (evita huecos) */
+.progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 4px; z-index: 1200; }
+
+/* Asegurar nav interno centrado sin crear desbordes */
+.main-nav { left: 0; right: 0; width: 100%; }
+.main-nav .nav-inner {
+  display: flex;
+  align-items: center;    /* center vertically */
+  justify-content: flex-start;
+  gap: 12px;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+/* Make nav-links a normal flex row and center it inside nav-inner */
+.nav-links {
+	position: static !important;   /* remove absolute positioning if present */
+	transform: none !important;
+	margin: 0 auto;                /* centers the menu in the available space */
+	display: flex;
+	gap: 18px;
+	align-items: center;
+	list-style: none;
+	padding: 0;
+}
+
+/* Nav link items - keep visual style but align vertically */
+.nav-links li { display: inline-flex; align-items: center; }
+.nav-links li a { line-height: 1; }
+
+/* Place brand at left without vertical offset; remove height forcing and top offsets */
+.main-nav .nav-inner .brand {
+	display: inline-flex;
+	align-items: center;
+	align-self: center;
+	height: auto;         /* allow natural height */
+	padding: 6px 10px;
+	margin: 0;
+	background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,247,251,0.9));
+	border: 1px solid rgba(15,30,45,0.04);
+	box-shadow: 0 6px 16px rgba(15,30,45,0.04);
+	vertical-align: middle;
+}
+
+/* Ensure initials bubble is vertically centered and not shifted */
+.main-nav .nav-inner .brand::before {
+	margin: 0;
+	transform: none;
+	line-height: 1;
+}
+
+/* Remove any hover translate that previously pushed brand upward */
+.brand:hover, .brand:focus {
+	transform: none;
+}
+
+/* Contenedores y grids centrados y que respeten el 100% del ancho del viewport */
+.container, .cards-grid, .overview-grid {
+  width: 100%;
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Evita que elementos con transform provoquen overflow lateral en algunos navegadores */
+.hero::after,
+.cookie-banner,
+.theme-overlay,
+.cookie-dimmer {
+  backface-visibility: hidden;
+  transform-origin: center;
+}
+
+/* Si algún elemento dentro de .card puede desbordar, recortar en exceso y evitar scroll lateral */
+.card, .project-card, .about-card, .contact-card {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0; /* importante para flex items que pueden causar overflow */
+}
+
+/* Asegura que los elementos flex/grid no causen overflow en contenedores estrechos */
+.cards-grid > *, .overview-grid > * { min-width: 0; }
+
+/* Opcional: forzar siempre la presencia de la barra vertical para evitar saltos de layout al aparecer/desaparecer */
+html { overflow-y: scroll; }
+
+/* Paleta: fondo claro, texto oscuro, acento azul/verde */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root{
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #222;
+  --muted: #5b6770;
+  --accent: #0a6b8a;
+  --accent-2: #1e90ff;
+  --shadow: rgba(15,30,45,0.08);
+}
+
+/* Global */
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing:antialiased;
+  transition: background-color 420ms ease, color 420ms ease;
+  padding: 0 18px; /* previously larger or none; keeps slight gap at edges on small screens */
+}
+
+/* Suavizar transiciones globales de color/fondo */
+:root, [data-theme="light"] {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #222;
+}
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --card: #0f1724;
+  --text: #e6eef6;
+}
+
+/* Asegurar que las tarjetas también transicionen suavemente */
+section, #rcorners1, form, table, .cookie-message, .main-nav {
+  transition: background-color 420ms ease, color 420ms ease, box-shadow 320ms ease;
+}
+
+/* Nav */
+nav{
+  background: var(--card);
+  box-shadow: 0 2px 8px var(--shadow);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+nav ul { list-style: none; padding: 12px; text-align: center; }
+nav ul li { display: inline-block; margin-right: 18px; }
+nav ul li a {
+  color: var(--accent);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+nav ul li a:hover { background: rgba(10,107,138,0.08); }
+
+/* Header / banner */
+header { position: relative; height: 60vh; background: linear-gradient(180deg, #eaf6fb, transparent); display:flex; align-items:center; justify-content:center; padding-top:56px; }
+.banner { text-align:center; }
+.banner h1 { color: var(--text); margin-bottom:12px; font-size:2rem; }
+.logo { max-width: 420px; width: 45%; height: auto; }
+
+/* ===== HERO / HEADER PROFESIONAL ===== */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 380px; /* reduce el ancho de la ilustración para dejar más espacio al contenido */
+  gap: 28px;
+  align-items: center;
+  padding: 48px 20px; /* menos padding vertical */
+  padding-bottom: 44px; /* espacio para la línea separadora */
+  position: relative;
+  overflow: visible;
+}
+
+/* decorative soft blobs */
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.18;
+  pointer-events: none;
+}
+.hero::before {
+  width: 360px; height: 360px;
+  right: -80px; top: -40px;
+  background: radial-gradient(circle at 30% 30%, rgba(10,107,138,0.18), rgba(30,144,255,0.02));
+}
+.hero::after {
+  width: 280px; height: 280px;
+  left: -60px; bottom: -80px;
+  background: radial-gradient(circle at 70% 70%, rgba(4,170,109,0.14), rgba(255,255,255,0));
+}
+
+/* content area */
+.hero-content { max-width: 720px; padding-right: 8px; }
+.hero .eyebrow { font-size: 0.95rem; color: var(--accent); font-weight:600; margin-bottom:8px; }
+.hero h1 {
+  font-size: clamp(28px, 6vw, 44px);
+  line-height: 1.02;
+  margin: 0 0 12px 0;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.hero p.lead {
+  margin: 0 0 20px 0;
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 64ch;
+}
+
+/* CTAs */
+.hero-ctas { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.btn {
+  display:inline-flex; align-items:center; gap:10px; justify-content:center;
+  padding:10px 16px; border-radius:10px; font-weight:600;
+  text-decoration:none; cursor:pointer; border:1px solid transparent;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 200ms;
+}
+.btn-primary {
+  background: linear-gradient(90deg,var(--accent),var(--accent-2));
+  color: white; box-shadow: 0 8px 26px rgba(10,107,138,0.12);
+}
+.btn-primary:hover { transform: translateY(-3px); }
+.btn-outline {
+  background: transparent; color: var(--accent); border:1px solid rgba(10,107,138,0.12);
+}
+.btn-outline:hover { background: rgba(10,107,138,0.06); transform: translateY(-2px); }
+
+/* illustration / logo wrap */
+.hero-illustration { display:flex; align-items:center; justify-content:center; }
+.logo-wrap {
+  /* ocupar un cuadro definido pero sin relleno; la imagen llenará todo */
+  width: 320px;
+  height: 320px;
+  border-radius: 12px;            /* puedes ajustar radio si quieres esquinas más redondeadas */
+  padding: 0;                     /* eliminar padding para que la imagen ocupe todo el cuadro */
+  background: transparent !important;
+  box-shadow: 0 12px 36px rgba(15,30,45,0.06); /* sutil sombra, opcional */
+  overflow: hidden;
+  display: block;
+}
+.logo-wrap.small {
+  width: 180px;
+  height: 180px;
+  border-radius: 10px;
+}
+.logo-wrap img.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;              /* rellena el cuadro manteniendo la proporción */
+  display: block;
+  border-radius: 0;               /* la imagen rellena el contenedor, el borde lo da .logo-wrap */
+}
+
+/* gentle floating animation */
+@keyframes floaty {
+  0% { transform: translateY(0px) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(-1deg); }
+}
+.logo-wrap { animation: floaty 6s ease-in-out infinite; }
+
+/* smaller hero for subpages */
+.hero.hero-subtle { padding: 36px 18px; grid-template-columns: 1fr 220px; }
+.hero.hero-subtle h1 { font-size: clamp(22px, 4.6vw, 30px); }
+.hero.hero-subtle .logo-wrap.small { width: 140px; height: 140px; }
+
+/* accessibility focus for buttons */
+.btn:focus { outline: none; box-shadow: 0 6px 20px rgba(10,107,138,0.12); }
+
+/* ===== Centrado global y ajustes de contenido ===== */
+/* Normalizar caja y evitar scroll lateral */
+html, body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* evita desplazamiento lateral */
+}
+
+/* Asegurar que todos los elementos usen el mismo box-sizing */
+*, *::before, *::after { box-sizing: inherit; }
+
+/* Contenedor central único para alinear todo el contenido */
+.site-wrapper {
+  max-width: 1180px; /* ajuste: aprovecha más ancho sin quedar vacío */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Aplicar centrado al nav-inner, header, main container y footer */
+.main-nav .nav-inner,
+header.hero,
+main > .container,
+footer,
+.progress-bar {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+/* Si hay sections con .container, ya estarán centradas; sin .container aplicamos regla */
+.section, section, main { width: 100%; }
+
+/* Ajuste de hero para aprovechar el ancho sin mucho espacio vacío */
+.hero {
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Centrar grids y limitar su ancho para que no queden pegados a los lados */
+.cards-grid,
+.overview-grid,
+.table-wrap {
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  justify-items: center;
+}
+
+/* Asegurar que cada tarjeta tenga ancho responsivo pero centrado */
+.card, .project-card, .about-card, .contact-card {
+  width: 100%;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Tablas y medias responsivas (no causen overflow) */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; max-width: 100%; border-collapse: collapse; }
+
+/* Evitar huecos en la izquierda del nav al hacer scroll */
+.main-nav {
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mantener la barra de progreso ocupando todo el ancho del viewport */
+.progress-bar { left: 0; right: 0; }
+
+/* Reducir padding lateral en pantallas pequeñas para usar mejor espacio */
+@media (max-width: 820px) {
+  .site-wrapper,
+  .main-nav .nav-inner,
+  header.hero,
+  main > .container,
+  footer {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .logo-wrap { width: 220px; height: 220px; }
+}
+
+/* Fallback: asegúrate de que elementos flex/grid no provoquen overflow */
+.cards-grid > *, .overview-grid > *, .container > * { min-width: 0; }
+
+/* ===========================
+   Layout central y tarjetas
+   =========================== */
+
+/* Contenedor central reutilizable */
+.container {
+  max-width: 1180px; /* más ancho para aprovechar espacio */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Secciones con separación uniforme */
+.section {
+  padding: 40px 20px;
+  display: block;
+}
+
+/* Heading centrado para secciones */
+.section .section-heading {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.section .section-heading h2 {
+  font-size: clamp(22px, 3.6vw, 32px);
+  margin: 0 0 8px 0;
+  color: var(--text);
+}
+.section .section-heading p.lead {
+  margin: 0 auto;
+  max-width: 780px;
+  color: var(--muted);
+}
+
+/* Tarjeta base (mejora de .card existente) */
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 14px 36px rgba(15,30,45,0.06);
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms;
+  width: 100%;
+}
+
+/* Asegurar que todas las tarjetas de la grid tengan la misma altura */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  align-items: stretch; /* <- importante: estira las celdas para la misma altura */
+  justify-items: center;
+  margin-top: 18px;
+}
+
+/* Hacer que cada tarjeta sea un flex column que ocupe toda la altura de la celda */
+.card, .project-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;      /* <- hace que la tarjeta llene la celda de la grid */
+  min-height: 220px; /* opcional: evita tarjetas muy pequeñas */
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Asegurar que el pie de la tarjeta se quede abajo */
+.card .card-footer {
+  margin-top: auto;
+}
+
+/* Grid de tarjetas (projects, overview, skills) */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  align-items: start;
+  justify-items: center;
+  margin-top: 18px;
+}
+
+/* Proyecto: tarjeta específica */
+.project-card {
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+.project-card .thumbnail {
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));
+}
+.project-card img { display:block; width:100%; height:auto; }
+
+/* Card header with icon/title */
+.card .card-head { display:flex; gap:12px; align-items:center; }
+.icon-wrap { width:48px; height:48px; border-radius:10px; display:grid; place-items:center; background: rgba(10,107,138,0.06); color:var(--accent-2); }
+
+/* Footer CTA inside cards */
+.card .card-footer { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:auto; }
+
+/* Centrar botón en el pie de las tarjetas de proyectos */
+.project-card .card-footer {
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+  align-items: center;
+  gap: 0;
+}
+
+/* asegurar que el botón no tenga margen que lo desplace */
+.project-card .card-footer .btn {
+  margin: 0;
+}
+
+/* Centrar el botón en el pie de las tarjetas de Acceso Rápido */
+.cards-grid .card .card-footer {
+  justify-content: center; /* centra horizontalmente el botón */
+  gap: 0; /* eliminar separación extra si la había */
+}
+
+/* Asegurar que el enlace actúe como bloque centrado cuando sea necesario */
+.cards-grid .card .card-footer .btn {
+  margin: 0 auto;
+}
+
+/* hover lift */
+.card:hover, .card:focus-within {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 60px rgba(15,30,45,0.10);
+}
+
+/* Sobre mí: tarjeta ancha */
+.about-card { max-width: 900px; margin: 0 auto; }
+
+/* Skills: barra horizontal y porcentaje */
+.skills-grid { display:grid; gap:12px; max-width:720px; margin:0 auto; }
+.skill-item { display:flex; flex-direction:column; gap:6px; }
+.skill-bar {
+  height: 12px; background: rgba(0,0,0,0.04); border-radius: 999px; overflow:hidden;
+}
+.skill-bar > i { display:block; height:100%; background: linear-gradient(90deg,#04AA6D,#1e90ff); width:0%; transition: width 700ms ease; }
+
+/* animar ancho según atributo aria-valuenow */
+.skill-item[data-value] .skill-bar > i { width: attr(data-value percent); } /* fallback not widely supported */
+.skill-item[data-value="75"] .skill-bar > i { width: 75%; }
+
+/* Contact card */
+.contact-card { max-width:720px; margin: 0 auto; }
+
+/* Contact: grid layout and improved visuals */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+/* ensure cards keep same look */
+.contact-card, .contact-info { padding: 22px; border-radius: 12px; }
+
+/* form layout */
+.contact-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Contact form: limpieza y orden */
+.contact-card { max-width: 880px; margin: 0 auto; padding: 22px; }
+.contact-form { width: 100%; box-sizing: border-box; }
+
+/* form grid rows */
+.contact-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+/* field layout */
+.form-field { display:flex; flex-direction:column; gap:8px; }
+.form-field label {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,30,45,0.06);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.95rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  transition: border-color 160ms, box-shadow 160ms;
+  box-sizing: border-box;
+}
+
+/* textarea */
+.form-field textarea { min-height: 140px; resize: vertical; }
+
+/* focus states */
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--accent-2);
+  box-shadow: 0 10px 30px rgba(30,144,255,0.06);
+}
+
+/* CTA and message */
+.contact-cta .form-msg {
+  color: #d04444; /* error default color; scripts can change to green on success */
+  font-size: 0.95rem;
+  margin-left: 6px;
+}
+
+/* spinner */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: rgba(255,255,255,0.95);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+  margin-left: 8px;
+  vertical-align: middle;
+  opacity: 0;
+  transition: opacity 160ms;
+}
+.btn.sending .spinner,
+.btn.sending .spinner[aria-hidden="false"] {
+  opacity: 1;
+}
+
+/* simple spin keyframes */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* full-width button on small screens for better touch targets */
+@media (max-width:720px) {
+  .contact-form .form-row { grid-template-columns: 1fr; }
+  .contact-cta { flex-direction: column; align-items: stretch; gap: 10px; }
+  .contact-cta .btn { width: 100%; }
+}
+
+/* ===========================
+   Footer
+   =========================== */
+
+/* Footer: fondo, separación y tipografía */
+footer {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: #f1f6fb; /* fondo distinto para el footer */
+  padding: 20px 0;           /* menos padding vertical para que no quede tan grande */
+  border-top: 1px solid rgba(15,30,45,0.04);
+  color: var(--text);
+  font-size: 0.95rem;
+  text-align: center; /* centra por defecto el contenido textual */
+}
+
+/* Contenido del footer centrado y con ancho máximo */
+footer .container {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Enlaces del footer: color, separación y efecto hover */
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+footer a:hover {
+  color: var(--accent-2);
+}
+
+/* Sección de copyright: separación superior y estilo de texto */
+footer .copyright {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Mobile: ajustar padding y tamaño de texto en el footer */
+@media (max-width: 720px) {
+  footer {
+    padding: 28px 16px;
+    font-size: 0.9rem;
+  }
+  footer .copyright {
+    margin-top: 18px;
+  }
+}
+
+/* ===========================
+   Otros ajustes y overrides
+   =========================== */
+
+/* Asegurar que el body use el fondo global */
+body {
+  background-color: var(--bg) !important;
+  color: var(--text);
+}
+
+/* Ocultar temporalmente el botón de cambio de tema */
+.theme-btn {
+	display: none !important;
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+/* También ocultar cualquier control auxiliar del toggle (por si existe) */
+.theme-switch,
+.theme-toggle-label,
+.theme-toggle-input {
+	display: none !important;
+	visibility: hidden !important;
+}
+
+/* Nuevo estilo para el enlace .brand como botón/logo */
+.brand {
+  /* nuevo aspecto: píldora con marca circular + texto */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,247,251,0.9));
+  border: 1px solid rgba(15,30,45,0.04);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.98rem;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(15,30,45,0.04);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms;
+}
+
+/* circular mark with initials (MH) */
+.brand::before {
+  content: "MH";
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(10,107,138,0.12);
+}
+
+/* hover / focus states */
+.brand:hover,
+.brand:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(15,30,45,0.10);
+  background: linear-gradient(180deg, rgba(255,255,255,1), rgba(250,252,255,0.98));
+  outline: none;
+}
+
+/* focus-visible (accessibility) */
+.brand:focus-visible {
+  box-shadow: 0 0 0 4px rgba(30,144,255,0.10);
+}
+
+/* compact variant when space is tight (keeps mark, hides text) */
+@media (max-width:480px) {
+  .brand {
+    padding: 6px 8px;
+    font-size: 0.92rem;
+  }
+  .brand::before { width: 34px; height: 34px; font-size: 0.82rem; }
+}
+
+/* Alineación y apariencia de .brand a la misma altura que los demás elementos del nav */
+.main-nav .nav-inner {
+	/* asegurar centro vertical */
+	align-items: center;
+}
+
+/* Override específico para mantener la marca a la misma línea que los enlaces */
+.main-nav .nav-inner .brand {
+	display: inline-flex;
+	align-items: center;
+	align-self: center;
+	height: 44px;        /* fija la altura para que coincida con el nav */
+	padding: 6px 12px;   /* ligeramente ajustado */
+	margin: 0;           /* eliminar cualquier margen vertical */
+	background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,247,251,0.9));
+	border: 1px solid rgba(15,30,45,0.04);
+	box-shadow: 0 6px 20px rgba(15,30,45,0.04);
+	vertical-align: middle;
+}
+
+/* Asegurar que las iniciales estén centradas dentro de la marca */
+.main-nav .nav-inner .brand::before {
+	display: inline-grid;
+	place-items: center;
+	margin: 0;
+	line-height: 1;
+	transform: none;
+}
+
+/* quitar el desplazamiento vertical al hacer hover (mantener pequeño realce visual) */
+.brand:hover,
+.brand:focus {
+	transform: none;
+	box-shadow: 0 12px 36px rgba(15,30,45,0.08);
+	background: linear-gradient(180deg, rgba(255,255,255,1), rgba(250,252,255,0.98));
+}
+
+/* Mobile: keep menu behavior but ensure centering still works */
+@media (max-width: 900px) {
+	.nav-links {
+		position: fixed;
+		top: var(--nav-height, 64px);
+		left: 12px;
+		right: 12px;
+		margin: 0;
+		padding: 12px;
+		flex-direction: column;
+		gap: 10px;
+		background: var(--card);
+		border-radius: 12px;
+		box-shadow: 0 12px 40px rgba(15,30,45,0.08);
+		display: none;
+	}
+	.main-nav.open .nav-links { display: flex; }
+}
+
+/* Idiomas: reuse skill visuals */
+.languages-grid {
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+  margin: 12px auto 0 auto;
+}
+.language-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.language-item .skill-bar {
+  height: 12px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.language-item .skill-bar > i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg,#04AA6D,#1e90ff);
+  transition: width 700ms ease;
+}
+
+/* ensure spacing consistent on small screens */
+@media (max-width:720px) {
+  .languages-grid { gap:10px; margin-top:10px; }
+}
+
+/* Incrementar altura de la nav y espaciado de los enlaces */
+:root {
+  --nav-height: 80px; /* aumentado desde 64px */
+}
+
+/* Asegurar espacio superior del body acorde al nav */
+body {
+  padding-top: var(--nav-height);
+}
+
+/* Barra principal: usar la nueva altura */
+.main-nav {
+  height: var(--nav-height);
+}
+
+/* Contenedor interno: ajustar altura y centrado vertical */
+.main-nav .nav-inner {
+  height: var(--nav-height);
+  align-items: center;
+  padding-left: 22px;
+  padding-right: 22px;
+}
+
+/* Enlaces del menú: más padding para menos sensación de apretado */
+.nav-links li a {
+  padding: 10px 16px; /* más alto y ancho */
+  border-radius: 10px;
+  line-height: 1;      /* mantener control sobre la altura */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Toggle y botón de tema un poco más grandes y centrados */
+.nav-toggle, .theme-btn {
+  height: 48px;
+  width: 48px;
+  display: inline-grid;
+  place-items: center;
+}
+
+/* Asegurar que el header/héroe no quede cubierto por el nav nuevo */
+header, .hero {
+  padding-top: calc(var(--nav-height) + 8px); /* pequeño espacio extra */
+}
+
+/* Mobile: mantener equilibrio en pantallas pequeñas */
+@media (max-width: 900px) {
+  :root { --nav-height: 72px; } /* reducir ligeramente en móvil */
+  .main-nav, .main-nav .nav-inner { height: var(--nav-height); }
+  .nav-links li a { padding: 10px 12px; }
+  .nav-toggle, .theme-btn { height: 44px; width: 44px; }
+}
+
+/* Premios: grid y tarjetas */
+.awards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.award-card {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: 0 10px 30px rgba(15,30,45,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 120px;
+}
+.award-head strong { font-size: 1rem; color: var(--text); }
+.award-card .muted { color: var(--muted); font-size: 0.94rem; }
+
+/* Media dentro de award-card */
+.award-media {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  display: block;
+  background: rgba(0,0,0,0.03);
+}
+.award-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Ajuste responsivo: reducir altura en móviles */
+@media (max-width:520px) {
+  .award-media { height: 110px; border-radius: 8px; }
+}
+
+/* Hacer que el footer sea full-bleed (ocupe todo el ancho) */
+footer {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: #f1f6fb; /* fondo distinto para el footer */
+  padding: 20px 0;           /* menos padding vertical para que no quede tan grande */
+  border-top: 1px solid rgba(15,30,45,0.04);
+}
+
+/* Contenido interno centrado y limitado */
+footer .cookie-content,
+footer > p {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+  text-align: center; /* aqui forzamos el centrado */
+}
+
+/* Centrar las acciones del banner (botones) */
+footer #cookieBanner .cookie-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Si existe un botón de cerrar, mantenerlo visible pero no desplazar el contenido centrado */
+footer #cookieBanner .cookie-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Ajuste móvil: reducir padding lateral para que el centrado funcione bien en pantallas estrechas */
+@media (max-width:720px) {
+  footer > p,
+  footer .cookie-content,
+  footer #cookieBanner .cookie-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Iconos en botones de contacto: tamaño y alineación */
+.contact-links .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.contact-links .btn svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  display: inline-block;
+  vertical-align: middle;
+  fill: currentColor; /* hereda el color del texto del botón */
+}
+.contact-links .btn-outline { color: var(--accent); border-color: rgba(10,107,138,0.12); }
+.contact-links .btn-outline:hover { background: rgba(10,107,138,0.06); color: var(--accent-2); }

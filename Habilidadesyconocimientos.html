@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habilidades y conocimientos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="habilidades-body">
+  <nav class="main-nav" aria-label="Principal">
+    <div class="nav-inner">
+      <!-- marca eliminada por petición -->
+      <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false"><span class="hamburger"></span></button>
+      <ul class="nav-links">
+        <li><a href="Index.html">Inicio</a></li>
+        <li><a href="Sobremí.html">Sobre mí</a></li>
+        <li><a href="Galeriadeproyectos.html">Proyectos</a></li>
+      </ul>
+
+      <!-- Nuevo control: botón con SVGs -->
+      <button class="theme-btn" id="themeBtn" aria-label="Cambiar tema" aria-pressed="false" title="Cambiar tema">
+        <!-- Moon icon only -->
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z" fill="#E6EEF6"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="progress-bar" aria-hidden="true"></div>
+
+  <header class="hero hero-subtle reveal" data-reveal>
+    <div class="hero-content">
+      <h1>Habilidades y conocimientos</h1>
+      <p class="lead">Resumen de conocimientos técnicos: HTML, CSS y herramientas aprendidas durante mi formación.</p>
+    </div>
+
+    <div class="hero-illustration" aria-hidden="true">
+      <div class="logo-wrap small">
+        <img src="logo.png" alt="Logo" class="logo">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="seccion3" class="reveal" data-reveal aria-labelledby="habilidades-heading">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="habilidades-heading">Habilidades y conocimientos</h2>
+          <p class="lead">Resumen de competencias técnicas.</p>
+        </div>
+
+        <div class="skills-grid" aria-label="Lista de habilidades">
+          <div class="skill-item" data-value="90" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+            <div style="display:flex;justify-content:space-between;"><strong>Lenguaje de Marcas</strong><span>90%</span></div>
+            <div class="skill-bar"><i style="width:90%"></i></div>
+          </div>
+
+          <div class="skill-item" data-value="70" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+            <div style="display:flex;justify-content:space-between;"><strong>ISO</strong><span>70%</span></div>
+            <div class="skill-bar"><i style="width:70%"></i></div>
+          </div>
+
+          <div class="skill-item" data-value="100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+            <div style="display:flex;justify-content:space-between;"><strong>Fundamentos Hardware</strong><span>100%</span></div>
+            <div class="skill-bar"><i style="width:100%"></i></div>
+          </div>
+
+          <div class="skill-item" data-value="60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+            <div style="display:flex;justify-content:space-between;"><strong>Administración de Redes</strong><span>60%</span></div>
+            <div class="skill-bar"><i style="width:60%"></i></div>
+          </div>
+
+          <div class="skill-item" data-value="80" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+            <div style="display:flex;justify-content:space-between;"><strong>Gestión de Base de Datos</strong><span>80%</span></div>
+            <div class="skill-bar"><i style="width:80%"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2024 Marcos Hidalgo Beleña</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
